@@ -10,7 +10,6 @@ import App from './App.tsx'
 
 useAuthStore.getState().initialize();
 
-
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
