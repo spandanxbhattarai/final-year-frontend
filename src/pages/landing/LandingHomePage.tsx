@@ -35,7 +35,7 @@ const HeroSection = () => (
       <div className="lg:col-span-7">
         <HeroBadge />
         <h1 className="text-5xl md:text-7xl font-display font-extrabold text-foreground tracking-tighter leading-[1.05] mb-8">
-          Your restaurant{' '}
+          Your restaurantz{' '}
           <span className="bg-clip-text text-transparent bg-linear-to-r from-primary to-accent">
             never misses
           </span>{' '}
