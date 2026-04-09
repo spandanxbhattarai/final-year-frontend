@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { useUIStore } from '@/store/ui.store';
 
+
 const navItems = [
   { to: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
   { to: '/tables', icon: UtensilsCrossed, label: 'Tables' },
@@ -32,10 +33,10 @@ export const Sidebar = () => {
       }`}
     >
       <div className="flex h-16 items-center gap-3 px-6 border-b border-sidebar-border">
-        <ChefHat className="h-7 w-7 text-sidebar-primary shrink-0" />
+        <img src="/logo.png" alt="Spandan" className="h-8 w-8 rounded-full object-cover shrink-0" />
         {sidebarOpen && (
           <span className="font-serif text-xl font-bold text-sidebar-foreground whitespace-nowrap">
-            La Maison
+            Spandan
           </span>
         )}
       </div>

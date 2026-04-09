@@ -5,8 +5,8 @@ export const LandingFooter = () => {
   return (
     <footer className="w-full py-12 px-8 flex flex-col md:flex-row justify-between items-center gap-6 bg-muted/40">
       <div className="flex flex-col items-center md:items-start gap-2">
-        <Link to="/" className="text-lg font-bold text-foreground font-display">
-          Spandan
+        <Link to="/" className="flex items-center gap-2 text-lg font-bold text-foreground font-display">
+          <img src="/logo.png" alt="Spandan" className="h-22 w-22 rounded-full object-cover" />
         </Link>
         <p className="text-xs uppercase tracking-widest text-muted-foreground">
           © {new Date().getFullYear()} Spandan AI. Crafted for Hospitality.

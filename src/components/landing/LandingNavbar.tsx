@@ -16,10 +16,10 @@ export const LandingNavbar = () => {
   const toggleTheme = useUIStore((s) => s.toggleTheme);
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 flex justify-between items-center px-6 py-3 bg-card/85 backdrop-blur-xl rounded-full mt-4 mx-auto w-[calc(100%-2rem)] max-w-7xl shadow-lg">
+    <nav className="fixed top-0 left-0 right-0 z-50 flex justify-between items-center px-6  bg-card/85 backdrop-blur-xl rounded-full mt-4 mx-auto w-[calc(100%-2rem)] max-w-7xl shadow-lg">
       <div className="flex items-center gap-8">
-        <Link to="/" className="text-xl font-bold text-foreground tracking-tighter font-display">
-          Spandan
+        <Link to="/" className="flex items-center gap-2 text-xl font-bold text-foreground tracking-tighter font-display">
+          <img src="/logo.png" alt="Spandan" className="h-18 w-18 rounded-full object-cover" />
         </Link>
         <div className="hidden md:flex gap-1 items-center">
           {navLinks.map((link) => (
