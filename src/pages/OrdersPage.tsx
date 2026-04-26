@@ -191,7 +191,10 @@ export const OrdersPage = () => {
   const shiftDate = (days: number) => {
     const d = new Date(date + 'T00:00:00');
     d.setDate(d.getDate() + days);
-    setDate(d.toISOString().slice(0, 10));
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    setDate(`${yyyy}-${mm}-${dd}`);
   };
 
   // count per status (always from all orders for this date, not filtered)
