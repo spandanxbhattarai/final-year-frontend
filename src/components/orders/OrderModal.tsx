@@ -34,13 +34,20 @@ export const OrderModal = ({ isOpen, onClose, order }: OrderModalProps) => {
 
         <div className="flex items-center justify-between">
           <span className="text-sm text-muted-foreground">Table</span>
-          <span className="text-sm text-card-foreground">#{order.tableNumber}</span>
+          <span className="text-sm text-card-foreground">{order.tableNumber ? `#${order.tableNumber}` : 'Phone Order'}</span>
         </div>
 
         <div className="flex items-center justify-between">
           <span className="text-sm text-muted-foreground">Customer</span>
           <span className="text-sm text-card-foreground">{order.customerName}</span>
         </div>
+
+        {order.prepareBy && (
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-muted-foreground">Prepare By</span>
+            <span className="text-sm font-medium text-orange-500">{order.prepareBy}</span>
+          </div>
+        )}
 
         <div>
           <h4 className="text-sm font-medium text-card-foreground mb-2">Items</h4>

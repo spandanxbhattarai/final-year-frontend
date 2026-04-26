@@ -1,5 +1,5 @@
 import { OrderStatusBadge } from './OrderStatusBadge';
-import { Clock, GripVertical } from 'lucide-react';
+import { Clock, GripVertical, Timer } from 'lucide-react';
 import type { Order } from '@/types';
 
 interface OrderCardProps {
@@ -24,7 +24,7 @@ export const OrderCard = ({ order, onClick }: OrderCardProps) => {
         <div className="flex items-center gap-2">
           <GripVertical className="h-4 w-4 text-muted-foreground cursor-grab" />
           <span className="text-sm font-semibold text-card-foreground">
-            #{order.id} — Table {order.tableNumber}
+            #{order.id} — {order.tableNumber ? `Table ${order.tableNumber}` : 'Phone Order'}
           </span>
         </div>
         <OrderStatusBadge status={order.status} />
@@ -45,9 +45,17 @@ export const OrderCard = ({ order, onClick }: OrderCardProps) => {
 
       <div className="flex items-center justify-between text-xs">
         <span className="font-semibold text-primary">${order.total.toFixed(2)}</span>
-        <div className="flex items-center gap-1 text-muted-foreground">
-          <Clock className="h-3 w-3" />
-          {getElapsedTime(order.createdAt)}
+        <div className="flex items-center gap-3 text-muted-foreground">
+          {order.prepareBy && (
+            <div className="flex items-center gap-1 text-orange-500 font-medium">
+              <Timer className="h-3 w-3" />
+              By {order.prepareBy}
+            </div>
+          )}
+          <div className="flex items-center gap-1">
+            <Clock className="h-3 w-3" />
+            {getElapsedTime(order.createdAt)}
+          </div>
         </div>
       </div>
     </div>

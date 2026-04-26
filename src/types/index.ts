@@ -59,10 +59,13 @@ export interface OrderItem {
 
 export interface Order {
   id: number;
-  tableId: number;
-  tableNumber: number;
+  tableId: number | null;
+  tableNumber: number | null;
   customerName: string;
   status: OrderStatus;
+  type: 'DINE_IN' | 'PHONE';
+  date: string;
+  prepareBy: string | null;
   items: OrderItem[];
   total: number;
   createdAt: string;

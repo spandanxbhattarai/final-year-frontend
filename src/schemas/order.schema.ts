@@ -27,10 +27,13 @@ export const orderItemResponseSchema = z.object({
 
 export const orderResponseSchema = z.object({
   id: z.number(),
-  tableId: z.number(),
-  tableNumber: z.number(),
+  tableId: z.number().nullable(),
+  tableNumber: z.number().nullable(),
   customerName: z.string(),
   status: z.enum(['PENDING', 'PREPARING', 'READY', 'SERVED', 'CANCELLED']),
+  type: z.enum(['DINE_IN', 'PHONE']).default('DINE_IN'),
+  date: z.string(),
+  prepareBy: z.string().nullable(),
   items: z.array(orderItemResponseSchema),
   total: z.number(),
   createdAt: z.string(),

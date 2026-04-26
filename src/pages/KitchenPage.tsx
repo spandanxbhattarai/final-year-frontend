@@ -2,7 +2,7 @@ import { useOrders, useUpdateOrderStatus } from '@/hooks/useOrders';
 import { OrderStatusBadge } from '@/components/orders/OrderStatusBadge';
 import { Button } from '@/components/ui/Button';
 import { Skeleton } from '@/components/ui/Skeleton';
-import { Clock, ChefHat } from 'lucide-react';
+import { Clock, ChefHat, Timer } from 'lucide-react';
 import type { Order } from '@/types';
 
 const getElapsedTime = (createdAt: string): string => {
@@ -26,7 +26,7 @@ const KitchenOrderCard = ({ order }: { order: Order }) => {
     <div className="rounded-xl bg-card border border-border p-5 shadow-sm">
       <div className="flex items-center justify-between mb-3">
         <span className="text-lg font-bold text-card-foreground">
-          #{order.id} — Table {order.tableNumber}
+          #{order.id} — {order.tableNumber ? `Table ${order.tableNumber}` : 'Phone Order'}
         </span>
         <OrderStatusBadge status={order.status} />
       </div>
@@ -43,9 +43,17 @@ const KitchenOrderCard = ({ order }: { order: Order }) => {
       </div>
 
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-1 text-xs text-muted-foreground">
-          <Clock className="h-3 w-3" />
-          {getElapsedTime(order.createdAt)}
+        <div className="flex items-center gap-3 text-xs text-muted-foreground">
+          <div className="flex items-center gap-1">
+            <Clock className="h-3 w-3" />
+            {getElapsedTime(order.createdAt)}
+          </div>
+          {order.prepareBy && (
+            <div className="flex items-center gap-1 text-orange-500 font-medium">
+              <Timer className="h-3 w-3" />
+              By {order.prepareBy}
+            </div>
+          )}
         </div>
         {next && (
           <Button
