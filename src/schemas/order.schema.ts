@@ -30,6 +30,7 @@ export const orderResponseSchema = z.object({
   tableId: z.number().nullable(),
   tableNumber: z.number().nullable(),
   customerName: z.string(),
+  phone: z.string().optional().default(''),
   status: z.enum(['PENDING', 'PREPARING', 'READY', 'SERVED', 'CANCELLED']),
   type: z.enum(['DINE_IN', 'PHONE']).default('DINE_IN'),
   date: z.string(),

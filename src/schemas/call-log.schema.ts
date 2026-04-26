@@ -2,11 +2,14 @@ import { z } from 'zod';
 
 export const callLogResponseSchema = z.object({
   id: z.number(),
+  vapiCallId: z.string().nullable(),
   callerName: z.string(),
   callerPhone: z.string(),
   duration: z.number(),
   status: z.enum(['COMPLETED', 'MISSED', 'VOICEMAIL']),
+  summary: z.string().nullable(),
   transcript: z.string().nullable(),
+  recordingUrl: z.string().nullable(),
   createdAt: z.string(),
 });
 

@@ -30,10 +30,17 @@ export const useSocket = () => {
       incrementNotifications();
     });
 
+    socket.on('call-log:created', (data: { callerName: string }) => {
+      queryClient.invalidateQueries({ queryKey: ['call-logs'] });
+      toast.success(`New call from ${data.callerName}`);
+      incrementNotifications();
+    });
+
     return () => {
       socket.off('new-order');
       socket.off('order-status-changed');
       socket.off('new-reservation');
+      socket.off('call-log:created');
     };
   }, [token, queryClient, incrementNotifications]);
 };

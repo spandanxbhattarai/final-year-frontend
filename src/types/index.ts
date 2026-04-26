@@ -62,6 +62,7 @@ export interface Order {
   tableId: number | null;
   tableNumber: number | null;
   customerName: string;
+  phone: string;
   status: OrderStatus;
   type: 'DINE_IN' | 'PHONE';
   date: string;
@@ -76,11 +77,14 @@ export type CallStatus = 'COMPLETED' | 'MISSED' | 'VOICEMAIL';
 
 export interface CallLog {
   id: number;
+  vapiCallId: string | null;
   callerName: string;
   callerPhone: string;
   duration: number;
   status: CallStatus;
+  summary: string | null;
   transcript: string | null;
+  recordingUrl: string | null;
   createdAt: string;
 }
 
