@@ -23,3 +23,13 @@ export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
 
   return <>{children}</>;
 };
+
+export const AdminRoute = ({ children }: ProtectedRouteProps) => {
+  const { user } = useAuth();
+
+  if (user?.role !== 'ADMIN') {
+    return <Navigate to="/kitchen" replace />;
+  }
+
+  return <>{children}</>;
+};

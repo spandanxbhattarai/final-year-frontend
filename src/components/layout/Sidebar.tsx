@@ -10,21 +10,25 @@ import {
   ChefHat,
 } from 'lucide-react';
 import { useUIStore } from '@/store/ui.store';
+import { useAuth } from '@/hooks/useAuth';
 
-
-const navItems = [
-  { to: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
-  { to: '/tables', icon: UtensilsCrossed, label: 'Tables' },
-  { to: '/reservations', icon: CalendarDays, label: 'Reservations' },
-  { to: '/menu', icon: ClipboardList, label: 'Menu' },
-  { to: '/orders', icon: ShoppingBag, label: 'Orders' },
-  { to: '/call-logs', icon: Phone, label: 'Call Logs' },
-  { to: '/kitchen', icon: ChefHat, label: 'Kitchen' },
-  { to: '/settings', icon: Settings, label: 'Settings' },
+const allNavItems = [
+  { to: '/dashboard', icon: LayoutDashboard, label: 'Dashboard', adminOnly: true },
+  { to: '/tables', icon: UtensilsCrossed, label: 'Tables', adminOnly: true },
+  { to: '/reservations', icon: CalendarDays, label: 'Reservations', adminOnly: false },
+  { to: '/menu', icon: ClipboardList, label: 'Menu', adminOnly: false },
+  { to: '/orders', icon: ShoppingBag, label: 'Orders', adminOnly: true },
+  { to: '/call-logs', icon: Phone, label: 'Call Logs', adminOnly: true },
+  { to: '/kitchen', icon: ChefHat, label: 'Kitchen', adminOnly: false },
+  { to: '/settings', icon: Settings, label: 'Settings', adminOnly: true },
 ];
 
 export const Sidebar = () => {
   const sidebarOpen = useUIStore((s) => s.sidebarOpen);
+  const { user } = useAuth();
+  const isAdmin = user?.role === 'ADMIN';
+
+  const navItems = allNavItems.filter((item) => isAdmin || !item.adminOnly);
 
   return (
     <aside

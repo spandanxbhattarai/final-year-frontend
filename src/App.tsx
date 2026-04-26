@@ -1,6 +1,6 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { PageShell } from '@/components/layout/PageShell';
-import { ProtectedRoute } from '@/components/layout/ProtectedRoute';
+import { ProtectedRoute, AdminRoute } from '@/components/layout/ProtectedRoute';
 import { LandingLayout } from '@/components/landing/LandingLayout';
 import { LoginPage } from '@/pages/LoginPage';
 import { DashboardPage } from '@/pages/DashboardPage';
@@ -28,9 +28,8 @@ const App = () => {
       </Route>
 
       <Route path="/login" element={<LoginPage />} />
-      <Route path="/kitchen" element={<PageShell />}>
-        <Route index element={<KitchenPage />} />
-      </Route>
+
+      {/* Protected routes — all logged-in users */}
       <Route
         element={
           <ProtectedRoute>
@@ -38,14 +37,19 @@ const App = () => {
           </ProtectedRoute>
         }
       >
-        <Route path="/dashboard" element={<DashboardPage />} />
-        <Route path="/tables" element={<TablesPage />} />
-        <Route path="/reservations" element={<ReservationsPage />} />
+        {/* Staff + Admin: kitchen, menu, reservations */}
+        <Route path="/kitchen" element={<KitchenPage />} />
         <Route path="/menu" element={<MenuPage />} />
-        <Route path="/orders" element={<OrdersPage />} />
-        <Route path="/call-logs" element={<CallLogsPage />} />
-        <Route path="/settings" element={<SettingsPage />} />
+        <Route path="/reservations" element={<ReservationsPage />} />
+
+        {/* Admin only */}
+        <Route path="/dashboard" element={<AdminRoute><DashboardPage /></AdminRoute>} />
+        <Route path="/tables" element={<AdminRoute><TablesPage /></AdminRoute>} />
+        <Route path="/orders" element={<AdminRoute><OrdersPage /></AdminRoute>} />
+        <Route path="/call-logs" element={<AdminRoute><CallLogsPage /></AdminRoute>} />
+        <Route path="/settings" element={<AdminRoute><SettingsPage /></AdminRoute>} />
       </Route>
+
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

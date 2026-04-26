@@ -1,8 +1,9 @@
+import { useState, useEffect } from 'react';
 import { useOrders, useUpdateOrderStatus } from '@/hooks/useOrders';
 import { OrderStatusBadge } from '@/components/orders/OrderStatusBadge';
 import { Button } from '@/components/ui/Button';
 import { Skeleton } from '@/components/ui/Skeleton';
-import { Clock, ChefHat, Timer, UtensilsCrossed, Phone } from 'lucide-react';
+import { Clock, ChefHat, Timer, UtensilsCrossed, Phone, AlertCircle } from 'lucide-react';
 import type { Order } from '@/types';
 
 const getElapsedTime = (createdAt: string): string => {
@@ -10,6 +11,23 @@ const getElapsedTime = (createdAt: string): string => {
   const mins = Math.floor(diff / 60000);
   if (mins < 60) return `${mins}m ago`;
   return `${Math.floor(mins / 60)}h ${mins % 60}m ago`;
+};
+
+const getTimeLeft = (order: Order): { text: string; overdue: boolean } | null => {
+  if (!order.prepareBy || ['SERVED', 'CANCELLED'].includes(order.status)) return null;
+  try {
+    const dateStr = order.date || new Date().toISOString().slice(0, 10);
+    const target = new Date(`${dateStr} ${order.prepareBy}`);
+    if (isNaN(target.getTime())) return null;
+    const diff = target.getTime() - Date.now();
+    const absMins = Math.abs(Math.floor(diff / 60000));
+    if (absMins < 60) return { text: `${absMins}m`, overdue: diff < 0 };
+    const h = Math.floor(absMins / 60);
+    const m = absMins % 60;
+    return { text: `${h}h ${m}m`, overdue: diff < 0 };
+  } catch {
+    return null;
+  }
 };
 
 const nextStatus: Record<string, string> = {
@@ -27,6 +45,13 @@ const priorityColor: Record<string, string> = {
 const KitchenOrderCard = ({ order }: { order: Order }) => {
   const updateStatus = useUpdateOrderStatus();
   const next = nextStatus[order.status];
+  const [timeLeft, setTimeLeft] = useState(getTimeLeft(order));
+
+  useEffect(() => {
+    if (!order.prepareBy) return;
+    const id = setInterval(() => setTimeLeft(getTimeLeft(order)), 30000);
+    return () => clearInterval(id);
+  }, [order]);
 
   return (
     <div className={`rounded-xl bg-card border border-border border-l-4 ${priorityColor[order.status] || ''} p-5 shadow-sm hover:shadow-md transition-shadow`}>
@@ -63,7 +88,17 @@ const KitchenOrderCard = ({ order }: { order: Order }) => {
             <Clock className="h-3 w-3" />
             {getElapsedTime(order.createdAt)}
           </div>
-          {order.prepareBy && (
+          {timeLeft && (
+            <div
+              className={`flex items-center gap-1 font-semibold ${
+                timeLeft.overdue ? 'text-red-500' : 'text-orange-500'
+              }`}
+            >
+              {timeLeft.overdue ? <AlertCircle className="h-3 w-3" /> : <Timer className="h-3 w-3" />}
+              {timeLeft.overdue ? `${timeLeft.text} overdue` : `${timeLeft.text} left`}
+            </div>
+          )}
+          {!timeLeft && order.prepareBy && (
             <div className="flex items-center gap-1 text-orange-500 font-medium">
               <Timer className="h-3 w-3" />
               By {order.prepareBy}

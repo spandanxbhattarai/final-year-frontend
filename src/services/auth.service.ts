@@ -18,8 +18,9 @@ export const registerUser = async (data: RegisterInput): Promise<AuthResponse> =
   return authResponseSchema.parse(res.data);
 };
 
-export const refreshToken = async (): Promise<RefreshResponse> => {
-  const res = await api.post('/auth/refresh');
+export const refreshToken = async (rt?: string): Promise<RefreshResponse> => {
+  const body = rt ? { refreshToken: rt } : {};
+  const res = await api.post('/auth/refresh', body);
   return refreshResponseSchema.parse(res.data);
 };
 

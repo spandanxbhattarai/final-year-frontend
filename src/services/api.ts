@@ -20,9 +20,10 @@ api.interceptors.response.use(
     if (err.response?.status === 401 && !err.config._retry && !isAuthRoute) {
       err.config._retry = true;
       try {
+        const rt = useAuthStore.getState().refreshTokenValue;
         const res = await axios.post(
           `${import.meta.env.VITE_API_URL}/auth/refresh`,
-          {},
+          rt ? { refreshToken: rt } : {},
           { withCredentials: true }
         );
         const { accessToken, user } = res.data;

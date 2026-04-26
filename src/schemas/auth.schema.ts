@@ -20,6 +20,7 @@ export const authResponseSchema = z.object({
     role: z.enum(['ADMIN', 'STAFF']),
   }),
   accessToken: z.string(),
+  refreshToken: z.string(),
 });
 
 export const refreshResponseSchema = z.object({

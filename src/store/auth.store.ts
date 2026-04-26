@@ -13,10 +13,12 @@ interface User {
 interface AuthState {
   user: User | null;
   token: string | null;
+  refreshTokenValue: string | null;
   initializing: boolean;
   login: (data: LoginInput) => Promise<void>;
   logout: () => void;
   setToken: (token: string) => void;
+  setRefreshToken: (token: string) => void;
   initialize: () => Promise<void>;
 }
 
@@ -25,25 +27,41 @@ export const useAuthStore = create<AuthState>()(
     (set) => ({
       user: null,
       token: null,
+      refreshTokenValue: null,
       initializing: true,
       login: async (data) => {
         const res = await loginUser(data);
-        set({ user: res.user, token: res.accessToken });
+        set({ user: res.user, token: res.accessToken, refreshTokenValue: res.refreshToken });
       },
-      logout: () => set({ user: null, token: null }),
+      logout: () => set({ user: null, token: null, refreshTokenValue: null }),
       setToken: (token) => set({ token }),
+      setRefreshToken: (token) => set({ refreshTokenValue: token }),
       initialize: async () => {
+        const state = useAuthStore.getState();
+        if (!state.token && !state.user) {
+          set({ initializing: false });
+          return;
+        }
         try {
-          const res = await refreshToken();
-          set({ user: res.user, token: res.accessToken, initializing: false });
+          const rt = state.refreshTokenValue;
+          const res = await refreshToken(rt || undefined);
+          set({
+            user: res.user,
+            token: res.accessToken,
+            initializing: false,
+          });
         } catch {
-          set({ user: null, token: null, initializing: false });
+          set({ initializing: false });
         }
       },
     }),
     {
       name: 'auth-storage',
-      partialize: (state) => ({ user: state.user, token: state.token }),
+      partialize: (state) => ({
+        user: state.user,
+        token: state.token,
+        refreshTokenValue: state.refreshTokenValue,
+      }),
     }
   )
 );
