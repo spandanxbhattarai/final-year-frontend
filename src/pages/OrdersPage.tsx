@@ -12,7 +12,6 @@ import {
   Timer,
   UtensilsCrossed,
   Phone,
-  ShoppingBag,
   AlertCircle,
 } from 'lucide-react';
 import type { Order } from '@/types';
