@@ -21,9 +21,14 @@ api.interceptors.response.use(
       err.config._retry = true;
       try {
         const rt = useAuthStore.getState().refreshTokenValue;
+        if (!rt) {
+          useAuthStore.getState().logout();
+          window.location.href = '/login';
+          return Promise.reject(err);
+        }
         const res = await axios.post(
           `${import.meta.env.VITE_API_URL}/auth/refresh`,
-          rt ? { refreshToken: rt } : {},
+          { refreshToken: rt },
           { withCredentials: true }
         );
         const { accessToken, user } = res.data;

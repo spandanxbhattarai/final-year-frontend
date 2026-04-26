@@ -42,16 +42,21 @@ export const useAuthStore = create<AuthState>()(
           set({ initializing: false });
           return;
         }
+        const rt = state.refreshTokenValue;
+        if (!rt) {
+          // No stored refresh token — force re-login
+          set({ user: null, token: null, refreshTokenValue: null, initializing: false });
+          return;
+        }
         try {
-          const rt = state.refreshTokenValue;
-          const res = await refreshToken(rt || undefined);
+          const res = await refreshToken(rt);
           set({
             user: res.user,
             token: res.accessToken,
             initializing: false,
           });
         } catch {
-          set({ initializing: false });
+          set({ user: null, token: null, refreshTokenValue: null, initializing: false });
         }
       },
     }),
