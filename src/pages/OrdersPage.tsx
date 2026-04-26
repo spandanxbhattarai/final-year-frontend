@@ -85,7 +85,7 @@ export const OrdersPage = () => {
             <ChevronRight className="h-4 w-4" />
           </Button>
           {date !== today && (
-            <Button variant="outline" size="sm" onClick={() => setDate(today)}>
+            <Button variant="secondary" size="sm" onClick={() => setDate(today)}>
               Today
             </Button>
           )}
