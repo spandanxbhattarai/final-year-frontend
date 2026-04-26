@@ -8,10 +8,10 @@ import {
 import type { CreateOrderInput } from '@/schemas/order.schema';
 import toast from 'react-hot-toast';
 
-export const useOrders = (status?: string) => {
+export const useOrders = (filters?: { status?: string; date?: string }) => {
   return useQuery({
-    queryKey: ['orders', status],
-    queryFn: () => fetchOrders(status),
+    queryKey: ['orders', filters],
+    queryFn: () => fetchOrders(filters),
     refetchInterval: 30000,
   });
 };

@@ -2,7 +2,7 @@ import { useOrders, useUpdateOrderStatus } from '@/hooks/useOrders';
 import { OrderStatusBadge } from '@/components/orders/OrderStatusBadge';
 import { Button } from '@/components/ui/Button';
 import { Skeleton } from '@/components/ui/Skeleton';
-import { Clock, ChefHat, Timer } from 'lucide-react';
+import { Clock, ChefHat, Timer, UtensilsCrossed, Phone } from 'lucide-react';
 import type { Order } from '@/types';
 
 const getElapsedTime = (createdAt: string): string => {
@@ -18,31 +18,46 @@ const nextStatus: Record<string, string> = {
   READY: 'SERVED',
 };
 
+const priorityColor: Record<string, string> = {
+  PENDING: 'border-l-amber-500',
+  PREPARING: 'border-l-primary',
+  READY: 'border-l-green-500',
+};
+
 const KitchenOrderCard = ({ order }: { order: Order }) => {
   const updateStatus = useUpdateOrderStatus();
   const next = nextStatus[order.status];
 
   return (
-    <div className="rounded-xl bg-card border border-border p-5 shadow-sm">
+    <div className={`rounded-xl bg-card border border-border border-l-4 ${priorityColor[order.status] || ''} p-5 shadow-sm hover:shadow-md transition-shadow`}>
       <div className="flex items-center justify-between mb-3">
-        <span className="text-lg font-bold text-card-foreground">
-          #{order.id} — {order.tableNumber ? `Table ${order.tableNumber}` : 'Phone Order'}
-        </span>
+        <div className="flex items-center gap-2">
+          <span className="text-lg font-bold text-card-foreground">#{order.id}</span>
+          <span className="text-sm text-muted-foreground">
+            {order.tableNumber ? (
+              <span className="flex items-center gap-1"><UtensilsCrossed className="h-3.5 w-3.5" /> Table {order.tableNumber}</span>
+            ) : (
+              <span className="flex items-center gap-1"><Phone className="h-3.5 w-3.5" /> Phone Order</span>
+            )}
+          </span>
+        </div>
         <OrderStatusBadge status={order.status} />
       </div>
 
-      <div className="space-y-2 mb-4">
+      <p className="text-sm text-muted-foreground mb-3">{order.customerName}</p>
+
+      <div className="space-y-1.5 mb-4">
         {order.items.map((item) => (
           <div key={item.id} className="flex items-center justify-between text-sm">
             <span className="text-card-foreground font-medium">
               {item.quantity}× {item.menuItemName}
             </span>
-            {item.notes && <span className="text-xs text-muted-foreground italic">{item.notes}</span>}
+            {item.notes && <span className="text-xs text-muted-foreground italic ml-2">{item.notes}</span>}
           </div>
         ))}
       </div>
 
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between pt-3 border-t border-border">
         <div className="flex items-center gap-3 text-xs text-muted-foreground">
           <div className="flex items-center gap-1">
             <Clock className="h-3 w-3" />
@@ -70,11 +85,16 @@ const KitchenOrderCard = ({ order }: { order: Order }) => {
 };
 
 export const KitchenPage = () => {
-  const { data: orders, isLoading } = useOrders();
+  const today = new Date().toISOString().slice(0, 10);
+  const { data: orders, isLoading } = useOrders({ date: today });
 
   const activeOrders = orders?.filter((o) =>
     ['PENDING', 'PREPARING', 'READY'].includes(o.status)
   ) || [];
+
+  const pendingCount = activeOrders.filter((o) => o.status === 'PENDING').length;
+  const preparingCount = activeOrders.filter((o) => o.status === 'PREPARING').length;
+  const readyCount = activeOrders.filter((o) => o.status === 'READY').length;
 
   if (isLoading) {
     return (
@@ -88,11 +108,18 @@ export const KitchenPage = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center gap-3">
-        <ChefHat className="h-6 w-6 text-primary" />
-        <p className="text-sm text-muted-foreground">
-          {activeOrders.length} active orders
-        </p>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <ChefHat className="h-6 w-6 text-primary" />
+          <p className="text-sm text-muted-foreground">
+            {activeOrders.length} active order{activeOrders.length !== 1 ? 's' : ''}
+          </p>
+        </div>
+        <div className="flex items-center gap-3 text-xs">
+          <span className="rounded-full bg-amber-500/10 text-amber-600 px-2.5 py-1 font-medium">{pendingCount} Pending</span>
+          <span className="rounded-full bg-primary/10 text-primary px-2.5 py-1 font-medium">{preparingCount} Preparing</span>
+          <span className="rounded-full bg-green-500/10 text-green-600 px-2.5 py-1 font-medium">{readyCount} Ready</span>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

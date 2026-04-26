@@ -5,8 +5,11 @@ import {
   orderResponseSchema,
 } from '@/schemas/order.schema';
 
-export const fetchOrders = async (status?: string): Promise<z.infer<typeof orderResponseSchema>[]> => {
-  const res = await api.get('/orders', { params: status ? { status } : {} });
+export const fetchOrders = async (filters?: { status?: string; date?: string }): Promise<z.infer<typeof orderResponseSchema>[]> => {
+  const params: Record<string, string> = {};
+  if (filters?.status) params.status = filters.status;
+  if (filters?.date) params.date = filters.date;
+  const res = await api.get('/orders', { params });
   return z.array(orderResponseSchema).parse(res.data);
 };
 

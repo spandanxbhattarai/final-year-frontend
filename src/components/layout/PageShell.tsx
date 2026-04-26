@@ -23,17 +23,22 @@ export const PageShell = () => {
   useSocket();
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background flex flex-col">
       <Sidebar />
       <div
-        className={`transition-all duration-300 ${
+        className={`flex-1 flex flex-col transition-all duration-300 ${
           sidebarOpen ? 'ml-64' : 'ml-20'
         }`}
       >
         <Header title={title} />
-        <main className="p-6">
+        <main className="flex-1 p-6">
           <Outlet />
         </main>
+        <footer className="border-t border-border px-6 py-4 text-center">
+          <p className="text-xs text-muted-foreground">
+            © {new Date().getFullYear()} Spandan AI. All rights reserved.
+          </p>
+        </footer>
       </div>
     </div>
   );
