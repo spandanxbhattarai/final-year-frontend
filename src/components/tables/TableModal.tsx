@@ -31,7 +31,8 @@ export const TableModal = ({ isOpen, onClose, table }: TableModalProps) => {
 
   useEffect(() => {
     if (table) {
-      reset({ number: table.number, capacity: table.capacity, floor: table.floor, status: table.status });
+      const status = table.status === 'RESERVED' ? 'AVAILABLE' : table.status;
+      reset({ number: table.number, capacity: table.capacity, floor: table.floor, status });
     } else {
       reset({ number: undefined, capacity: undefined, floor: '', status: 'AVAILABLE' });
     }
