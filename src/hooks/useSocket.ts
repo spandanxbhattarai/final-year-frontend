@@ -8,7 +8,7 @@ import { useUIStore } from '@/store/ui.store';
 export const useSocket = () => {
   const queryClient = useQueryClient();
   const { token } = useAuth();
-  const incrementNotifications = useUIStore((s) => s.incrementNotifications);
+  const addNotification = useUIStore((s) => s.addNotification);
 
   useEffect(() => {
     if (!token) return;
@@ -17,7 +17,7 @@ export const useSocket = () => {
     socket.on('new-order', (data: { customerName: string }) => {
       queryClient.invalidateQueries({ queryKey: ['orders'] });
       toast.success(`New order from ${data.customerName}`);
-      incrementNotifications();
+      addNotification({ message: `New order from ${data.customerName}`, type: 'order' });
     });
 
     socket.on('order:updated', () => {
@@ -27,7 +27,7 @@ export const useSocket = () => {
     socket.on('new-reservation', (data: { customerName: string }) => {
       queryClient.invalidateQueries({ queryKey: ['reservations'] });
       toast.success(`New reservation — ${data.customerName}`);
-      incrementNotifications();
+      addNotification({ message: `New reservation — ${data.customerName}`, type: 'reservation' });
     });
 
     socket.on('reservation:updated', () => {
@@ -65,7 +65,7 @@ export const useSocket = () => {
     socket.on('call-log:created', (data: { callerName: string }) => {
       queryClient.invalidateQueries({ queryKey: ['call-logs'] });
       toast.success(`New call from ${data.callerName}`);
-      incrementNotifications();
+      addNotification({ message: `New call from ${data.callerName}`, type: 'call' });
     });
 
     return () => {
@@ -82,5 +82,5 @@ export const useSocket = () => {
       socket.off('menu:deleted');
       socket.off('call-log:created');
     };
-  }, [token, queryClient, incrementNotifications]);
+  }, [token, queryClient, addNotification]);
 };
