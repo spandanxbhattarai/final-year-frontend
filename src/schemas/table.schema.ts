@@ -4,7 +4,7 @@ export const createTableSchema = z.object({
   number: z.coerce.number().int().min(1, 'Table number required'),
   capacity: z.coerce.number().int().min(1, 'Min 1').max(20, 'Max 20'),
   floor: z.string().min(1, 'Floor required'),
-  status: z.enum(['AVAILABLE', 'OCCUPIED', 'RESERVED', 'MAINTENANCE']).default('AVAILABLE'),
+  status: z.enum(['AVAILABLE', 'OCCUPIED', 'MAINTENANCE']).default('AVAILABLE'),
 });
 
 export const updateTableSchema = createTableSchema.partial();

@@ -63,7 +63,6 @@ export const TableModal = ({ isOpen, onClose, table }: TableModalProps) => {
           options={[
             { value: 'AVAILABLE', label: 'Available' },
             { value: 'OCCUPIED', label: 'Occupied' },
-            { value: 'RESERVED', label: 'Reserved' },
             { value: 'MAINTENANCE', label: 'Maintenance' },
           ]}
         />
