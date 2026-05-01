@@ -19,6 +19,7 @@ export interface Table {
   capacity: number;
   status: TableStatus;
   floor: string;
+  reservations?: Reservation[];
 }
 
 export type ReservationStatus = 'PENDING' | 'CONFIRMED' | 'CANCELLED' | 'COMPLETED';

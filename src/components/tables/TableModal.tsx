@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { createTableSchema, type CreateTableInput } from '@/schemas/table.schema';
@@ -26,10 +27,15 @@ export const TableModal = ({ isOpen, onClose, table }: TableModalProps) => {
     reset,
   } = useForm<CreateTableInput>({
     resolver: zodResolver(createTableSchema) as any,
-    defaultValues: table
-      ? { number: table.number, capacity: table.capacity, floor: table.floor, status: table.status }
-      : undefined,
   });
+
+  useEffect(() => {
+    if (table) {
+      reset({ number: table.number, capacity: table.capacity, floor: table.floor, status: table.status });
+    } else {
+      reset({ number: undefined, capacity: undefined, floor: '', status: 'AVAILABLE' });
+    }
+  }, [table, reset]);
 
   const onSubmit = (data: CreateTableInput) => {
     if (isEdit && table) {

@@ -12,16 +12,27 @@ const statusColors: Record<string, string> = {
   MAINTENANCE: 'border-zinc-500 bg-zinc-500/10 text-zinc-500',
 };
 
+function getEffectiveStatus(table: Table): string {
+  if (table.status !== 'RESERVED') return table.status;
+  const today = new Date().toISOString().slice(0, 10);
+  const hasReservationToday = table.reservations?.some(
+    (r) => r.date === today && r.status !== 'CANCELLED'
+  );
+  return hasReservationToday ? 'RESERVED' : 'AVAILABLE';
+}
+
 export const TableCard = ({ table, onClick }: TableCardProps) => {
+  const effectiveStatus = getEffectiveStatus(table);
+
   return (
     <button
       onClick={() => onClick(table)}
-      className={`flex flex-col items-center justify-center rounded-xl border-2 p-6 transition-all duration-200 hover:scale-105 hover:shadow-md ${statusColors[table.status]}`}
+      className={`flex flex-col items-center justify-center rounded-xl border-2 p-6 transition-all duration-200 hover:scale-105 hover:shadow-md ${statusColors[effectiveStatus]}`}
     >
       <span className="text-2xl font-bold">#{table.number}</span>
       <span className="text-xs mt-1 opacity-80">Seats {table.capacity}</span>
       <span className="text-xs mt-2 font-medium uppercase tracking-wider">
-        {table.status}
+        {effectiveStatus}
       </span>
     </button>
   );
