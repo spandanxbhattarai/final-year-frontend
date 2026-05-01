@@ -13,6 +13,7 @@ const pageTitles: Record<string, string> = {
   '/call-logs': 'Call Logs',
   '/kitchen': 'Kitchen Display',
   '/settings': 'Settings',
+  '/contact-messages': 'Contact Messages',
 };
 
 export const PageShell = () => {

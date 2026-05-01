@@ -1,4 +1,3 @@
-import { Header } from '@/components/layout/Header';
 import { useContactMessages, useMarkContactRead, useDeleteContact } from '@/hooks/useContact';
 import { Mail, MailOpen, Trash2, Building2, Phone, Clock } from 'lucide-react';
 import { useState } from 'react';
@@ -75,9 +74,7 @@ export const ContactMessagesPage = () => {
   const unreadCount = messages?.filter((m) => !m.isRead).length ?? 0;
 
   return (
-    <>
-      <Header title="Contact Messages" />
-      <main className="p-6 space-y-6">
+    <main className="p-6 space-y-6">
         <div className="flex items-center justify-between">
           <p className="text-sm text-muted-foreground">
             {messages?.length ?? 0} message{messages?.length !== 1 ? 's' : ''}{' '}
@@ -110,6 +107,5 @@ export const ContactMessagesPage = () => {
           </div>
         )}
       </main>
-    </>
   );
 };
