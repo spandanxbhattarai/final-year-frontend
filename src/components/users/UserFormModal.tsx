@@ -37,7 +37,7 @@ export const UserFormModal = ({ isOpen, onClose, onSubmit, loading, user }: User
 
   useEffect(() => {
     if (user) {
-      reset({ name: user.name, email: user.email, role: user.role, password: '' });
+      reset({ name: user.name, email: user.email, role: user.role as 'ADMIN' | 'STAFF' | 'COOK', password: '' });
     } else {
       reset({ name: '', email: '', password: '', role: 'STAFF' });
     }
