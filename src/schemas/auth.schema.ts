@@ -17,7 +17,7 @@ export const authResponseSchema = z.object({
     id: z.number(),
     name: z.string(),
     email: z.string(),
-    role: z.enum(['ADMIN', 'STAFF']),
+    role: z.enum(['SUPER_ADMIN', 'ADMIN', 'STAFF', 'COOK']),
   }),
   accessToken: z.string(),
   refreshToken: z.string(),
@@ -29,7 +29,7 @@ export const refreshResponseSchema = z.object({
     id: z.number(),
     name: z.string(),
     email: z.string(),
-    role: z.enum(['ADMIN', 'STAFF']),
+    role: z.enum(['SUPER_ADMIN', 'ADMIN', 'STAFF', 'COOK']),
   }),
 });
 

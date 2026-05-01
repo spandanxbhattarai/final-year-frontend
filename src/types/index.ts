@@ -1,8 +1,14 @@
+export type UserRole = 'SUPER_ADMIN' | 'ADMIN' | 'STAFF' | 'COOK';
+
 export interface User {
   id: number;
   name: string;
   email: string;
-  role: 'ADMIN' | 'STAFF';
+  role: UserRole;
+  isBlocked: boolean;
+  isDeleted: boolean;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export type TableStatus = 'AVAILABLE' | 'OCCUPIED' | 'RESERVED' | 'MAINTENANCE';
@@ -93,6 +99,12 @@ export interface DashboardStats {
   todayOrders: number;
   todayRevenue: number;
   todayCalls: number;
+  trends: {
+    bookings: { diff: number; label: string } | null;
+    orders: { diff: number; label: string } | null;
+    revenue: { diff: number; label: string } | null;
+    calls: null;
+  };
 }
 
 export interface RevenueData {
@@ -103,4 +115,11 @@ export interface RevenueData {
 export interface TopItem {
   name: string;
   orders: number;
+}
+
+export interface ActivityItem {
+  id: string;
+  type: 'order' | 'reservation' | 'call';
+  message: string;
+  createdAt: string;
 }

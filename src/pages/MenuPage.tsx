@@ -43,6 +43,7 @@ export const MenuPage = () => {
       />
 
       <MenuItemModal
+        key={editItem?.id ?? 'new'}
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
         item={editItem}

@@ -1,9 +1,11 @@
 import { Clock } from 'lucide-react';
 import { Badge } from '@/components/ui/Badge';
+import { Skeleton } from '@/components/ui/Skeleton';
 import type { Reservation } from '@/types';
 
 interface ReservationTimelineProps {
   reservations: Reservation[];
+  loading?: boolean;
 }
 
 const statusVariant = (status: string) => {
@@ -15,7 +17,7 @@ const statusVariant = (status: string) => {
   }
 };
 
-export const ReservationTimeline = ({ reservations }: ReservationTimelineProps) => {
+export const ReservationTimeline = ({ reservations, loading }: ReservationTimelineProps) => {
   const sorted = [...reservations].sort((a, b) => a.time.localeCompare(b.time));
 
   return (
@@ -25,7 +27,20 @@ export const ReservationTimeline = ({ reservations }: ReservationTimelineProps) 
         <h3 className="text-sm font-semibold text-card-foreground">Today's Reservations</h3>
       </div>
       <div className="space-y-3 max-h-72 overflow-y-auto">
-        {sorted.length === 0 ? (
+        {loading ? (
+          Array.from({ length: 3 }).map((_, i) => (
+            <div key={i} className="flex items-center justify-between py-2">
+              <div className="flex items-center gap-3">
+                <Skeleton className="h-4 w-12" />
+                <div className="space-y-1">
+                  <Skeleton className="h-4 w-24" />
+                  <Skeleton className="h-3 w-16" />
+                </div>
+              </div>
+              <Skeleton className="h-5 w-16 rounded-full" />
+            </div>
+          ))
+        ) : sorted.length === 0 ? (
           <p className="text-sm text-muted-foreground text-center py-4">No reservations today</p>
         ) : (
           sorted.map((r) => (

@@ -27,3 +27,7 @@ export const refreshToken = async (rt?: string): Promise<RefreshResponse> => {
 export const logoutUser = async (): Promise<void> => {
   await api.post('/auth/logout');
 };
+
+export const deleteAccount = async (): Promise<void> => {
+  await api.delete('/auth/delete-account');
+};

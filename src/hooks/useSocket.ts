@@ -20,7 +20,7 @@ export const useSocket = () => {
       incrementNotifications();
     });
 
-    socket.on('order-status-changed', () => {
+    socket.on('order:updated', () => {
       queryClient.invalidateQueries({ queryKey: ['orders'] });
     });
 
@@ -28,6 +28,38 @@ export const useSocket = () => {
       queryClient.invalidateQueries({ queryKey: ['reservations'] });
       toast.success(`New reservation — ${data.customerName}`);
       incrementNotifications();
+    });
+
+    socket.on('reservation:updated', () => {
+      queryClient.invalidateQueries({ queryKey: ['reservations'] });
+    });
+
+    socket.on('reservation:deleted', () => {
+      queryClient.invalidateQueries({ queryKey: ['reservations'] });
+    });
+
+    socket.on('table:updated', () => {
+      queryClient.invalidateQueries({ queryKey: ['tables'] });
+    });
+
+    socket.on('table:created', () => {
+      queryClient.invalidateQueries({ queryKey: ['tables'] });
+    });
+
+    socket.on('table:deleted', () => {
+      queryClient.invalidateQueries({ queryKey: ['tables'] });
+    });
+
+    socket.on('menu:created', () => {
+      queryClient.invalidateQueries({ queryKey: ['menu'] });
+    });
+
+    socket.on('menu:updated', () => {
+      queryClient.invalidateQueries({ queryKey: ['menu'] });
+    });
+
+    socket.on('menu:deleted', () => {
+      queryClient.invalidateQueries({ queryKey: ['menu'] });
     });
 
     socket.on('call-log:created', (data: { callerName: string }) => {
@@ -38,8 +70,16 @@ export const useSocket = () => {
 
     return () => {
       socket.off('new-order');
-      socket.off('order-status-changed');
+      socket.off('order:updated');
       socket.off('new-reservation');
+      socket.off('reservation:updated');
+      socket.off('reservation:deleted');
+      socket.off('table:updated');
+      socket.off('table:created');
+      socket.off('table:deleted');
+      socket.off('menu:created');
+      socket.off('menu:updated');
+      socket.off('menu:deleted');
       socket.off('call-log:created');
     };
   }, [token, queryClient, incrementNotifications]);

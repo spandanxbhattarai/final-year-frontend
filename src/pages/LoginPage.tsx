@@ -28,8 +28,9 @@ export const LoginPage = () => {
     try {
       await login(data);
       navigate('/dashboard');
-    } catch {
-      setError('Invalid email or password');
+    } catch (err: unknown) {
+      const axiosErr = err as { response?: { data?: { message?: string } } };
+      setError(axiosErr.response?.data?.message || 'Invalid email or password');
     } finally {
       setLoading(false);
     }

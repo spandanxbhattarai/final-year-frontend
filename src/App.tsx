@@ -1,6 +1,6 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { PageShell } from '@/components/layout/PageShell';
-import { ProtectedRoute, AdminRoute } from '@/components/layout/ProtectedRoute';
+import { ProtectedRoute, SuperAdminRoute, AdminOrAboveRoute, StaffOrAboveRoute, AdminOrCookRoute } from '@/components/layout/ProtectedRoute';
 import { LandingLayout } from '@/components/landing/LandingLayout';
 import { LoginPage } from '@/pages/LoginPage';
 import { DashboardPage } from '@/pages/DashboardPage';
@@ -11,6 +11,8 @@ import { OrdersPage } from '@/pages/OrdersPage';
 import { CallLogsPage } from '@/pages/CallLogsPage';
 import { SettingsPage } from '@/pages/SettingsPage';
 import { KitchenPage } from '@/pages/KitchenPage';
+import { UsersPage } from '@/pages/UsersPage';
+import { ProfilePage } from '@/pages/ProfilePage';
 import { LandingHomePage } from '@/pages/landing/LandingHomePage';
 import { LandingAboutPage } from '@/pages/landing/LandingAboutPage';
 import { LandingContactPage } from '@/pages/landing/LandingContactPage';
@@ -37,17 +39,24 @@ const App = () => {
           </ProtectedRoute>
         }
       >
-        {/* Staff + Admin: kitchen, menu, reservations */}
-        <Route path="/kitchen" element={<KitchenPage />} />
-        <Route path="/menu" element={<MenuPage />} />
-        <Route path="/reservations" element={<ReservationsPage />} />
+        {/* Admin and Cook only */}
+        <Route path="/kitchen" element={<AdminOrCookRoute><KitchenPage /></AdminOrCookRoute>} />
+        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/settings" element={<StaffOrAboveRoute><SettingsPage /></StaffOrAboveRoute>} />
 
-        {/* Admin only */}
-        <Route path="/dashboard" element={<AdminRoute><DashboardPage /></AdminRoute>} />
-        <Route path="/tables" element={<AdminRoute><TablesPage /></AdminRoute>} />
-        <Route path="/orders" element={<AdminRoute><OrdersPage /></AdminRoute>} />
-        <Route path="/call-logs" element={<AdminRoute><CallLogsPage /></AdminRoute>} />
-        <Route path="/settings" element={<AdminRoute><SettingsPage /></AdminRoute>} />
+        {/* Staff and above */}
+        <Route path="/menu" element={<StaffOrAboveRoute><MenuPage /></StaffOrAboveRoute>} />
+        <Route path="/reservations" element={<StaffOrAboveRoute><ReservationsPage /></StaffOrAboveRoute>} />
+        <Route path="/tables" element={<StaffOrAboveRoute><TablesPage /></StaffOrAboveRoute>} />
+        <Route path="/orders" element={<StaffOrAboveRoute><OrdersPage /></StaffOrAboveRoute>} />
+
+        {/* Admin and above */}
+        <Route path="/dashboard" element={<AdminOrAboveRoute><DashboardPage /></AdminOrAboveRoute>} />
+        <Route path="/call-logs" element={<AdminOrAboveRoute><CallLogsPage /></AdminOrAboveRoute>} />
+
+
+        {/* Super Admin only */}
+        <Route path="/users" element={<SuperAdminRoute><UsersPage /></SuperAdminRoute>} />
       </Route>
 
       <Route path="*" element={<Navigate to="/" replace />} />

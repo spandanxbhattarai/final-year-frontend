@@ -2,16 +2,18 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { LoginInput } from '@/schemas/auth.schema';
 import { loginUser, refreshToken } from '@/services/auth.service';
+import { disconnectSocket } from '@/lib/socket';
+import type { UserRole } from '@/types';
 
-interface User {
+interface AuthUser {
   id: number;
   name: string;
   email: string;
-  role: 'ADMIN' | 'STAFF';
+  role: UserRole;
 }
 
 interface AuthState {
-  user: User | null;
+  user: AuthUser | null;
   token: string | null;
   refreshTokenValue: string | null;
   initializing: boolean;
@@ -31,9 +33,13 @@ export const useAuthStore = create<AuthState>()(
       initializing: true,
       login: async (data) => {
         const res = await loginUser(data);
-        set({ user: res.user, token: res.accessToken, refreshTokenValue: res.refreshToken });
+        // Set initializing: false to prevent initialize() from overwriting this login result
+        set({ user: res.user, token: res.accessToken, refreshTokenValue: res.refreshToken, initializing: false });
       },
-      logout: () => set({ user: null, token: null, refreshTokenValue: null }),
+      logout: () => {
+        disconnectSocket();
+        set({ user: null, token: null, refreshTokenValue: null });
+      },
       setToken: (token) => set({ token }),
       setRefreshToken: (token) => set({ refreshTokenValue: token }),
       initialize: async () => {
@@ -44,19 +50,19 @@ export const useAuthStore = create<AuthState>()(
         }
         const rt = state.refreshTokenValue;
         if (!rt) {
-          // No stored refresh token — force re-login
           set({ user: null, token: null, refreshTokenValue: null, initializing: false });
           return;
         }
         try {
           const res = await refreshToken(rt);
-          set({
-            user: res.user,
-            token: res.accessToken,
-            initializing: false,
-          });
+          // Only update if login() hasn't been called already (initializing still true)
+          if (useAuthStore.getState().initializing) {
+            set({ user: res.user, token: res.accessToken, initializing: false });
+          }
         } catch {
-          set({ user: null, token: null, refreshTokenValue: null, initializing: false });
+          if (useAuthStore.getState().initializing) {
+            set({ user: null, token: null, refreshTokenValue: null, initializing: false });
+          }
         }
       },
     }),

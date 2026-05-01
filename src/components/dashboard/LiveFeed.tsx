@@ -28,18 +28,33 @@ export const LiveFeed = () => {
       addItem(`New order from ${data.customerName}`);
     });
 
+    socket.on('order:updated', (data: { id: number; status: string }) => {
+      addItem(`Order #${data.id} → ${data.status}`);
+    });
+
     socket.on('new-reservation', (data: { customerName: string }) => {
       addItem(`New reservation — ${data.customerName}`);
     });
 
-    socket.on('order-status-changed', (data: { orderId: number; status: string }) => {
-      addItem(`Order #${data.orderId} → ${data.status}`);
+    socket.on('reservation:updated', (data: { id: number; status: string }) => {
+      addItem(`Reservation #${data.id} → ${data.status}`);
+    });
+
+    socket.on('table:updated', (data: { id: number; status: string }) => {
+      addItem(`Table #${data.id} → ${data.status}`);
+    });
+
+    socket.on('call-log:created', (data: { callerName: string }) => {
+      addItem(`New call from ${data.callerName}`);
     });
 
     return () => {
       socket.off('new-order');
+      socket.off('order:updated');
       socket.off('new-reservation');
-      socket.off('order-status-changed');
+      socket.off('reservation:updated');
+      socket.off('table:updated');
+      socket.off('call-log:created');
     };
   }, [token]);
 

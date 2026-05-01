@@ -12,7 +12,6 @@ export const useOrders = (filters?: { status?: string; date?: string }) => {
   return useQuery({
     queryKey: ['orders', filters],
     queryFn: () => fetchOrders(filters),
-    refetchInterval: 30000,
   });
 };
 
