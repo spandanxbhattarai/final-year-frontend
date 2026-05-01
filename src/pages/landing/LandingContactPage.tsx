@@ -1,5 +1,6 @@
 import { AtSign, Phone, MapPin, ArrowRight, MapPinned } from 'lucide-react';
 import { useState, type FormEvent } from 'react';
+import { useSubmitContact } from '@/hooks/useContact';
 
 /* ─── Sub-components ─── */
 
@@ -83,10 +84,14 @@ const ContactSidebar = () => (
 
 const ContactForm = () => {
   const [submitted, setSubmitted] = useState(false);
+  const [formData, setFormData] = useState({ name: '', restaurantName: '', email: '', phone: '', message: '' });
+  const submitMutation = useSubmitContact();
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    submitMutation.mutate(formData, {
+      onSuccess: () => setSubmitted(true),
+    });
   };
 
   if (submitted) {
@@ -127,6 +132,8 @@ const ContactForm = () => {
               placeholder="Julianne Smith"
               type="text"
               required
+              value={formData.name}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             />
           </div>
           <div className="space-y-2">
@@ -137,6 +144,8 @@ const ContactForm = () => {
               className="w-full bg-background border-0 rounded-lg px-4 py-4 text-foreground focus:ring-2 focus:ring-primary/20 placeholder:text-muted-foreground/50 transition-all"
               placeholder="Le Bistro de Luxe"
               type="text"
+              value={formData.restaurantName}
+              onChange={(e) => setFormData({ ...formData, restaurantName: e.target.value })}
             />
           </div>
         </div>
@@ -151,6 +160,8 @@ const ContactForm = () => {
               placeholder="julianne@lebistro.com"
               type="email"
               required
+              value={formData.email}
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
             />
           </div>
           <div className="space-y-2">
@@ -161,6 +172,8 @@ const ContactForm = () => {
               className="w-full bg-background border-0 rounded-lg px-4 py-4 text-foreground focus:ring-2 focus:ring-primary/20 placeholder:text-muted-foreground/50 transition-all"
               placeholder="+44 20 7946 0958"
               type="tel"
+              value={formData.phone}
+              onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
             />
           </div>
         </div>
@@ -174,16 +187,19 @@ const ContactForm = () => {
             placeholder="How can we help your establishment?"
             rows={4}
             required
+            value={formData.message}
+            onChange={(e) => setFormData({ ...formData, message: e.target.value })}
           />
         </div>
 
         <div className="pt-4">
           <button
             type="submit"
-            className="w-full bg-linear-to-br from-primary to-primary/80 text-primary-foreground font-bold py-5 rounded-lg flex items-center justify-center gap-3 hover:opacity-90 transition-all hover:scale-[0.98] active:scale-95 shadow-xl shadow-primary/20"
+            disabled={submitMutation.isPending}
+            className="w-full bg-linear-to-br from-primary to-primary/80 text-primary-foreground font-bold py-5 rounded-lg flex items-center justify-center gap-3 hover:opacity-90 transition-all hover:scale-[0.98] active:scale-95 shadow-xl shadow-primary/20 disabled:opacity-50"
           >
-            Request a Demo
-            <ArrowRight className="h-5 w-5" />
+            {submitMutation.isPending ? 'Sending...' : 'Request a Demo'}
+            {!submitMutation.isPending && <ArrowRight className="h-5 w-5" />}
           </button>
           <p className="text-center mt-6 text-xs text-muted-foreground">
             Our team typically responds within 4 business hours.

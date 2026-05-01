@@ -17,6 +17,7 @@ import { LandingHomePage } from '@/pages/landing/LandingHomePage';
 import { LandingAboutPage } from '@/pages/landing/LandingAboutPage';
 import { LandingContactPage } from '@/pages/landing/LandingContactPage';
 import { RestaurantTestPage } from '@/pages/landing/RestaurantTestPage';
+import { ContactMessagesPage } from '@/pages/ContactMessagesPage';
 
 const App = () => {
   return (
@@ -53,6 +54,7 @@ const App = () => {
         {/* Admin and above */}
         <Route path="/dashboard" element={<AdminOrAboveRoute><DashboardPage /></AdminOrAboveRoute>} />
         <Route path="/call-logs" element={<AdminOrAboveRoute><CallLogsPage /></AdminOrAboveRoute>} />
+        <Route path="/contact-messages" element={<AdminOrAboveRoute><ContactMessagesPage /></AdminOrAboveRoute>} />
 
 
         {/* Super Admin only */}

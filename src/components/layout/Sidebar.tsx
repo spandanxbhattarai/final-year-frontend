@@ -10,6 +10,7 @@ import {
   ChefHat,
   Users,
   User,
+  MessageSquare,
 } from 'lucide-react';
 import { useUIStore } from '@/store/ui.store';
 import { useAuth } from '@/hooks/useAuth';
@@ -23,6 +24,7 @@ const allNavItems: { to: string; icon: React.ElementType; label: string; roles: 
   { to: '/menu', icon: ClipboardList, label: 'Menu', roles: ['SUPER_ADMIN', 'ADMIN', 'STAFF'] },
   { to: '/orders', icon: ShoppingBag, label: 'Orders', roles: ['SUPER_ADMIN', 'ADMIN', 'STAFF'] },
   { to: '/call-logs', icon: Phone, label: 'Call Logs', roles: ['SUPER_ADMIN', 'ADMIN'] },
+  { to: '/contact-messages', icon: MessageSquare, label: 'Messages', roles: ['SUPER_ADMIN', 'ADMIN'] },
   { to: '/kitchen', icon: ChefHat, label: 'Kitchen', roles: ['SUPER_ADMIN', 'ADMIN', 'COOK'] },
   { to: '/settings', icon: Settings, label: 'Settings', roles: ['SUPER_ADMIN', 'ADMIN', 'STAFF', 'COOK'] },
   { to: '/profile', icon: User, label: 'Profile', roles: ['SUPER_ADMIN', 'ADMIN', 'STAFF', 'COOK'] },
