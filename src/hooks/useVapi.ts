@@ -4,9 +4,9 @@ import VapiModule from '@vapi-ai/web';
 // Handle both ESM default and CJS interop
 const Vapi = (VapiModule as unknown as { default: typeof VapiModule }).default ?? VapiModule;
 
-const VAPI_PUBLIC_KEY = 'f6302ae4-aef2-44a1-a8db-2c858f4f4de1';
-const ASSISTANT_ID_0 = '9b38bb29-8bfa-4da2-8e76-d4c2f95869c3';
-const ASSISTANT_ID_1 = '6a1171dc-fc95-4de2-8692-4d43cb2c287d';
+const VAPI_PUBLIC_KEY = '5a8530f0-f126-427e-8a31-d3d44567a46a';
+const ASSISTANT_ID_0 = '50fe6b6b-ceab-4ea8-9a68-b3dc87b8e5ec';
+const ASSISTANT_ID_1 = 'eac98de3-865e-4229-8a50-4f038cebd431';
 
 export type VapiStatus = 'idle' | 'connecting' | 'active' | 'ending';
 
