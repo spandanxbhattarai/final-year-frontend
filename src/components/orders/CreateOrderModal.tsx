@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { createOrderSchema, type CreateOrderInput } from '@/schemas/order.schema';
+import { z } from 'zod';
+import type { CreateOrderInput } from '@/schemas/order.schema';
 import { useCreateOrder } from '@/hooks/useOrders';
 import { useMenuItems } from '@/hooks/useMenu';
 import { useTables } from '@/hooks/useTables';
@@ -27,16 +28,22 @@ export const CreateOrderModal = ({ isOpen, onClose }: CreateOrderModalProps) => 
   const { data: menuItems } = useMenuItems();
   const { data: tables } = useTables();
 
+  const formSchema = z.object({
+    tableId: z.coerce.number().int().min(1, 'Table required'),
+    customerName: z.string().min(2, 'Name required').max(100),
+  });
+
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<CreateOrderInput>({
-    resolver: zodResolver(createOrderSchema) as any,
+  } = useForm<Pick<CreateOrderInput, 'tableId' | 'customerName'>>({
+    resolver: zodResolver(formSchema) as any,
   });
 
   const [items, setItems] = useState<OrderItemRow[]>([{ menuItemId: 0, quantity: 1, notes: '' }]);
+  const [itemsError, setItemsError] = useState('');
 
   const addItem = () => setItems([...items, { menuItemId: 0, quantity: 1, notes: '' }]);
 
@@ -51,7 +58,7 @@ export const CreateOrderModal = ({ isOpen, onClose }: CreateOrderModalProps) => 
     setItems(updated);
   };
 
-  const onSubmit = (data: CreateOrderInput) => {
+  const onSubmit = (data: Pick<CreateOrderInput, 'tableId' | 'customerName'>) => {
     const validItems = items
       .filter((item) => item.menuItemId > 0)
       .map((item) => ({
@@ -60,7 +67,11 @@ export const CreateOrderModal = ({ isOpen, onClose }: CreateOrderModalProps) => 
         notes: item.notes || '',
       }));
 
-    if (validItems.length === 0) return;
+    if (validItems.length === 0) {
+      setItemsError('At least one item required');
+      return;
+    }
+    setItemsError('');
 
     createMutation.mutate(
       { ...data, items: validItems },
@@ -104,8 +115,8 @@ export const CreateOrderModal = ({ isOpen, onClose }: CreateOrderModalProps) => 
               <Plus className="h-4 w-4 mr-1" /> Add Item
             </Button>
           </div>
-          {errors.items?.message && (
-            <p className="text-xs text-destructive mb-2">{errors.items.message}</p>
+          {itemsError && (
+            <p className="text-xs text-destructive mb-2">{itemsError}</p>
           )}
           <div className="space-y-3">
             {items.map((item, index) => (
