@@ -47,6 +47,7 @@ export const ReservationsPage = () => {
       />
 
       <ReservationModal
+        key={editReservation?.id ?? 'new'}
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
         reservation={editReservation}

@@ -4,6 +4,7 @@ import { createMenuItemSchema, type CreateMenuItemInput } from '@/schemas/menu.s
 import { useCreateMenuItem, useUpdateMenuItem } from '@/hooks/useMenu';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
+import { Select } from '@/components/ui/Select';
 import { Button } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
 import type { MenuItem } from '@/types';
@@ -12,9 +13,10 @@ interface MenuItemModalProps {
   isOpen: boolean;
   onClose: () => void;
   item?: MenuItem | null;
+  categories?: string[];
 }
 
-export const MenuItemModal = ({ isOpen, onClose, item }: MenuItemModalProps) => {
+export const MenuItemModal = ({ isOpen, onClose, item, categories = [] }: MenuItemModalProps) => {
   const createMutation = useCreateMenuItem();
   const updateMutation = useUpdateMenuItem();
   const isEdit = !!item;
@@ -57,7 +59,12 @@ export const MenuItemModal = ({ isOpen, onClose, item }: MenuItemModalProps) => 
         <Input label="Name" {...register('name')} error={errors.name?.message} />
         <Textarea label="Description" {...register('description')} error={errors.description?.message} />
         <Input label="Price" type="number" step="0.01" {...register('price')} error={errors.price?.message} />
-        <Input label="Category" {...register('category')} error={errors.category?.message} />
+        <Select
+          label="Category"
+          options={categories.map((c) => ({ value: c, label: c }))}
+          {...register('category')}
+          error={errors.category?.message}
+        />
         <Input label="Image URL" {...register('imageUrl')} error={errors.imageUrl?.message} />
         <div className="flex gap-3 justify-end pt-2">
           <Button variant="ghost" type="button" onClick={onClose}>Cancel</Button>

@@ -3,6 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { createReservationSchema, type CreateReservationInput } from '@/schemas/reservation.schema';
 import { useCreateReservation, useUpdateReservation } from '@/hooks/useReservations';
 import { Input } from '@/components/ui/Input';
+import { Select } from '@/components/ui/Select';
 import { Button } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
 import type { Reservation } from '@/types';
@@ -23,7 +24,7 @@ export const ReservationModal = ({ isOpen, onClose, reservation }: ReservationMo
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<CreateReservationInput>({
+  } = useForm<CreateReservationInput & { status?: string }>({
     resolver: zodResolver(createReservationSchema) as any,
     defaultValues: reservation
       ? {
@@ -33,18 +34,19 @@ export const ReservationModal = ({ isOpen, onClose, reservation }: ReservationMo
           date: reservation.date,
           time: reservation.time,
           partySize: reservation.partySize,
+          status: reservation.status,
         }
-      : undefined,
+      : { status: 'CONFIRMED' },
   });
 
-  const onSubmit = (data: CreateReservationInput) => {
+  const onSubmit = (data: CreateReservationInput & { status?: string }) => {
     if (isEdit && reservation) {
       updateMutation.mutate(
         { id: reservation.id, data },
         { onSuccess: () => { reset(); onClose(); } }
       );
     } else {
-      createMutation.mutate(data, {
+      createMutation.mutate({ ...data, status: 'CONFIRMED' } as any, {
         onSuccess: () => { reset(); onClose(); },
       });
     }
@@ -59,6 +61,18 @@ export const ReservationModal = ({ isOpen, onClose, reservation }: ReservationMo
         <Input label="Date" type="date" {...register('date')} error={errors.date?.message} />
         <Input label="Time" type="time" {...register('time')} error={errors.time?.message} />
         <Input label="Party size" type="number" {...register('partySize')} error={errors.partySize?.message} />
+        {isEdit && (
+          <Select
+            label="Status"
+            options={[
+              { value: 'PENDING', label: 'Pending' },
+              { value: 'CONFIRMED', label: 'Confirmed' },
+              { value: 'CANCELLED', label: 'Cancelled' },
+              { value: 'COMPLETED', label: 'Completed' },
+            ]}
+            {...register('status')}
+          />
+        )}
         <div className="flex gap-3 justify-end pt-2">
           <Button variant="ghost" type="button" onClick={onClose}>Cancel</Button>
           <Button type="submit" loading={createMutation.isPending || updateMutation.isPending}>

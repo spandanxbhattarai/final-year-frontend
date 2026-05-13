@@ -47,6 +47,7 @@ export const MenuPage = () => {
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
         item={editItem}
+        categories={categoryNames}
       />
 
       <ConfirmDialog

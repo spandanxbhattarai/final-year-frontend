@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useOrders, useUpdateOrderStatus, useCancelOrder } from '@/hooks/useOrders';
 import { OrderStatusBadge } from '@/components/orders/OrderStatusBadge';
+import { CreateOrderModal } from '@/components/orders/CreateOrderModal';
 import { Button } from '@/components/ui/Button';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { EmptyState } from '@/components/ui/EmptyState';
@@ -13,6 +14,7 @@ import {
   UtensilsCrossed,
   Phone,
   AlertCircle,
+  Plus,
 } from 'lucide-react';
 import type { Order } from '@/types';
 
@@ -182,6 +184,7 @@ export const OrdersPage = () => {
   const [date, setDate] = useState(today);
   const [statusFilter, setStatusFilter] = useState('');
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [createModalOpen, setCreateModalOpen] = useState(false);
 
   const filters: { date: string; status?: string } = { date };
   if (statusFilter) filters.status = statusFilter;
@@ -231,6 +234,9 @@ export const OrdersPage = () => {
             </Button>
           )}
         </div>
+        <Button onClick={() => setCreateModalOpen(true)}>
+          <Plus className="h-4 w-4 mr-1" /> New Order
+        </Button>
       </div>
 
       {/* ── Status tabs ── */}
@@ -281,6 +287,11 @@ export const OrdersPage = () => {
           onClose={() => setSelectedOrder(null)}
         />
       )}
+
+      <CreateOrderModal
+        isOpen={createModalOpen}
+        onClose={() => setCreateModalOpen(false)}
+      />
     </div>
   );
 };
